@@ -1,0 +1,16 @@
+{
+  "common": {
+    "skip": "Ir para o conteúdo",
+    "language": "Idioma"
+  },
+  "marketing": {
+    "title": "Oficina Norte",
+    "body": "Página estática para quem chega pelo buscador.",
+    "story": "Ler a história",
+    "contact": "Fale com a oficina",
+    "name": "Nome",
+    "email": "E-mail",
+    "send": "Enviar",
+    "unavailable": "Conteúdo indisponível."
+  }
+}

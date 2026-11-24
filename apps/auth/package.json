@@ -1,0 +1,37 @@
+{
+  "name": "@swiss/auth",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "nx": {
+    "tags": [
+      "type:app",
+      "scope:auth"
+    ]
+  },
+  "dependencies": {
+    "next": "16.4.6",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "next-intl": "4.16.1",
+    "@swiss/ui": "workspace:*",
+    "@swiss/auth-client": "workspace:*",
+    "better-auth": "1.7.28",
+    "@better-auth/mongo-adapter": "1.7.28",
+    "mongodb": "7.9.1",
+    "@swiss/observability": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.1",
+    "typescript": "5.9.3",
+    "vitest": "5.1.1"
+  }
+}

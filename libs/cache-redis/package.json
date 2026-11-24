@@ -1,0 +1,22 @@
+{
+  "name": "@swiss/cache-redis",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "test": "vitest run",
+    "lint": "eslint .",
+    "build": "tsc --noEmit -p tsconfig.json"
+  },
+  "nx": { "tags": ["type:lib", "scope:shared", "runtime:server"] },
+  "dependencies": {
+    "@swiss/observability": "workspace:*",
+    "redis": "6.4.0"
+  },
+  "devDependencies": {
+    "redis-memory-server": "0.14.0",
+    "typescript": "5.9.3",
+    "vitest": "5.1.1"
+  }
+}

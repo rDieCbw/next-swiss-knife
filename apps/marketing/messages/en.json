@@ -1,0 +1,16 @@
+{
+  "common": {
+    "skip": "Skip to content",
+    "language": "Language"
+  },
+  "marketing": {
+    "title": "North Workshop",
+    "body": "A static page for search visitors.",
+    "story": "Read the story",
+    "contact": "Contact the workshop",
+    "name": "Name",
+    "email": "Email",
+    "send": "Send",
+    "unavailable": "Content is unavailable."
+  }
+}

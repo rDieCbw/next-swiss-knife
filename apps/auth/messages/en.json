@@ -1,0 +1,22 @@
+{
+  "common": {
+    "skip": "Skip to content",
+    "language": "Language"
+  },
+  "auth": {
+    "title": "Identity",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "organization": "Organization",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "orgName": "Organization name",
+    "slug": "Slug",
+    "failed": "Could not finish.",
+    "signedIn": "Session opened.",
+    "created": "Account created.",
+    "active": "Organization is active.",
+    "createOrg": "Create organization"
+  }
+}

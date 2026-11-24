@@ -1,0 +1,11 @@
+packages:
+  - "apps/*"
+  - "libs/*"
+  - "e2e"
+onlyBuiltDependencies:
+  - esbuild
+  - nx
+  - "@swc/core"
+  - mongodb-memory-server
+  - redis-memory-server
+  - "@parcel/watcher"

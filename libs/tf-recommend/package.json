@@ -1,0 +1,29 @@
+{
+  "name": "@swiss/tf-recommend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./browser": "./src/browser.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "lint": "eslint .",
+    "build": "tsc --noEmit -p tsconfig.json"
+  },
+  "nx": {
+    "tags": [
+      "type:lib",
+      "scope:commerce"
+    ]
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "4.22.0",
+    "@swiss/observability": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "5.1.1"
+  }
+}

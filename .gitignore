@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+.nx
+coverage
+test-results
+playwright-report
+blob-report
+.env
+*.tsbuildinfo
+data/media
+Untitled

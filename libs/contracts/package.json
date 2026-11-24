@@ -1,0 +1,32 @@
+{
+  "name": "@swiss/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./api": "./src/api.ts",
+    "./openapi.json": "./openapi.json"
+  },
+  "scripts": {
+    "codegen": "tsx src/openapi.ts && orval --config orval.config.ts",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "build": "tsx src/openapi.ts && tsc --noEmit -p tsconfig.json"
+  },
+  "nx": {
+    "tags": ["type:lib", "scope:shared"]
+  },
+  "dependencies": {
+    "@asteasolutions/zod-to-openapi": "9.1.0",
+    "@swiss/observability": "workspace:*",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "5.108.4",
+    "orval": "8.49.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vitest": "5.1.1"
+  }
+}

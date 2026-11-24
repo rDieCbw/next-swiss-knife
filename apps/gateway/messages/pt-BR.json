@@ -1,0 +1,10 @@
+{
+  "common": {
+    "skip": "Ir para o conteúdo",
+    "language": "Idioma"
+  },
+  "gateway": {
+    "title": "Gateway",
+    "body": "BFF, tenant e contrato OpenAPI."
+  }
+}

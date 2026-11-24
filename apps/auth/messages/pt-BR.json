@@ -1,0 +1,22 @@
+{
+  "common": {
+    "skip": "Ir para o conteúdo",
+    "language": "Idioma"
+  },
+  "auth": {
+    "title": "Identidade",
+    "signIn": "Entrar",
+    "signUp": "Criar conta",
+    "organization": "Organização",
+    "email": "E-mail",
+    "password": "Senha",
+    "name": "Nome",
+    "orgName": "Nome da organização",
+    "slug": "Slug",
+    "failed": "Não foi possível concluir.",
+    "signedIn": "Sessão aberta.",
+    "created": "Conta criada.",
+    "active": "Organização ativa.",
+    "createOrg": "Criar organização"
+  }
+}

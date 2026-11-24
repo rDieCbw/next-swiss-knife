@@ -1,0 +1,33 @@
+{
+  "name": "next-swiss-knife",
+  "private": true,
+  "packageManager": "pnpm@10.23.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "nx run-many -t build",
+    "test": "nx run-many -t test",
+    "lint": "nx run-many -t lint",
+    "codegen": "nx run @swiss/contracts:codegen",
+    "dev": "nx run-many -t dev --parallel=10",
+    "seed": "node tools/scripts/seed.mjs",
+    "prune": "node tools/scripts/prune.mjs",
+    "eject": "node tools/scripts/eject.mjs"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "nx", "@swc/core", "mongodb-memory-server", "redis-memory-server", "@parcel/watcher"]
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@eslint/js": "^9.39.1",
+    "@nx/eslint-plugin": "^24.0.6",
+    "@nx/js": "^24.0.6",
+    "eslint": "^9.39.1",
+    "nx": "^24.0.6",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vitest": "^5.1.1"
+  }
+}

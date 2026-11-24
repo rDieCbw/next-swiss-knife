@@ -1,0 +1,16 @@
+{
+  "name": "@swiss/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "lint": "eslint .",
+    "build": "tsc --noEmit -p tsconfig.json"
+  },
+  "nx": { "tags": ["type:app", "scope:shared"] },
+  "devDependencies": {
+    "@playwright/test": "1.65.1",
+    "typescript": "5.9.3",
+    "eslint": "9.39.1"
+  }
+}

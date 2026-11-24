@@ -1,0 +1,29 @@
+{
+  "name": "@swiss/auth-client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./browser": "./src/browser.ts",
+    "./session": "./src/session.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "build": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "nx": { "tags": ["type:lib", "scope:shared"] },
+  "dependencies": {
+    "better-auth": "1.7.28"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "react": "19.2.1",
+    "typescript": "5.9.3",
+    "vitest": "5.1.1"
+  }
+}

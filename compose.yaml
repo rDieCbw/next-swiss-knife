@@ -1,0 +1,256 @@
+services:
+  # service:mongo
+  mongo:
+    image: mongo:7
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports: ["27017:27017"]
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { quit(rs.status().ok ? 0 : 1) } catch (e) { quit(rs.initiate({_id:'rs0', members:[{_id:0, host:'127.0.0.1:27017'}]}).ok ? 0 : 1) }"]
+      interval: 5s
+      timeout: 15s
+      retries: 30
+      start_period: 10s
+    profiles: ["nosql", "core-apps", "commerce-erp"]
+  # end:mongo
+  # service:redis
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    profiles: ["cache", "core-apps", "commerce-erp", "realtime", "media-industrial"]
+  # end:redis
+  # service:gateway
+  gateway:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.next
+      args: { APP: gateway, PORT: "3000" }
+    ports: ["3000:3000"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3000"
+      MONGODB_URI: mongodb://mongo:27017/swiss?replicaSet=rs0&directConnection=true
+      REDIS_URL: redis://redis:6379
+      AUTH_URL: http://auth:3001
+    depends_on:
+      mongo: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    profiles: ["core-apps"]
+  # end:gateway
+  # service:auth
+  auth:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.next
+      args: { APP: auth, PORT: "3001" }
+    ports: ["3001:3001"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3001"
+      MONGODB_URI: mongodb://mongo:27017/swiss?replicaSet=rs0&directConnection=true
+      BETTER_AUTH_URL: http://localhost:3001
+    depends_on:
+      mongo: { condition: service_healthy }
+    profiles: ["core-apps"]
+  # end:auth
+  # service:marketing
+  marketing:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.next
+      args: { APP: marketing, PORT: "3002" }
+    ports: ["3002:3002"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3002/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3002"
+      GATEWAY_URL: http://gateway:3000
+    profiles: ["marketing"]
+  # end:marketing
+  # service:commerce
+  commerce:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.next
+      args: { APP: commerce, PORT: "3003" }
+    ports: ["3003:3003"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3003/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3003"
+      GATEWAY_URL: http://gateway:3000
+    profiles: ["commerce-erp"]
+  # end:commerce
+  # service:erp
+  erp:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.next
+      args: { APP: erp, PORT: "3004" }
+    ports: ["3004:3004"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3004/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3004"
+      GATEWAY_URL: http://gateway:3000
+      REDIS_URL: redis://redis:6379
+      MONGODB_URI: mongodb://mongo:27017/swiss?replicaSet=rs0&directConnection=true
+    profiles: ["commerce-erp"]
+  # end:erp
+  # service:realtime
+  realtime:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.realtime
+    ports: ["3009:3009"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3009/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3009"
+      REDIS_URL: redis://redis:6379
+      MONGODB_URI: mongodb://mongo:27017/swiss?replicaSet=rs0&directConnection=true
+    profiles: ["realtime", "media-industrial"]
+  # end:realtime
+  # service:chat
+  chat:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.next
+      args: { APP: chat, PORT: "3008" }
+    ports: ["3008:3008"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3008/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3008"
+      NEXT_PUBLIC_REALTIME_WS: ws://localhost:3009/ws
+    profiles: ["realtime"]
+  # end:chat
+  # service:game
+  game:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.next
+      args: { APP: game, PORT: "3007" }
+    ports: ["3007:3007"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3007/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3007"
+      NEXT_PUBLIC_REALTIME_WS: ws://localhost:3009/ws
+    profiles: ["realtime"]
+  # end:game
+  # service:streaming
+  streaming:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.streaming
+    ports: ["3006:3006"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3006/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3006"
+      REDIS_URL: redis://redis:6379
+      MONGODB_URI: mongodb://mongo:27017/swiss?replicaSet=rs0&directConnection=true
+    volumes: ["media:/app/apps/streaming/data/media"]
+    profiles: ["media-industrial"]
+  # end:streaming
+  # service:industrial
+  industrial:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.next
+      args: { APP: industrial, PORT: "3005" }
+    ports: ["3005:3005"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3005/api/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    environment:
+      PORT: "3005"
+      GATEWAY_URL: http://gateway:3000
+      NEXT_PUBLIC_REALTIME_URL: http://localhost:3009
+    profiles: ["media-industrial"]
+  # end:industrial
+  # service:otel-collector
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.114.0
+    command: ["--config=/etc/otel-collector.yaml"]
+    volumes:
+      - ./docker/otel-collector.yaml:/etc/otel-collector.yaml:ro
+    ports: ["4318:4318"]
+    depends_on: [tempo]
+    profiles: ["observability"]
+  # end:otel-collector
+  # service:tempo
+  tempo:
+    image: grafana/tempo:2.7.2
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./docker/tempo.yaml:/etc/tempo.yaml:ro
+    profiles: ["observability"]
+  # end:tempo
+  # service:loki
+  loki:
+    image: grafana/loki:3.3.2
+    ports: ["3100:3100"]
+    profiles: ["observability"]
+  # end:loki
+  # service:grafana
+  grafana:
+    image: grafana/grafana:11.4.0
+    ports: ["3300:3000"]
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    volumes:
+      - ./docker/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+    profiles: ["observability"]
+  # end:grafana
+
+volumes:
+  media:
